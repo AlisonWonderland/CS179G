@@ -1,13 +1,14 @@
 #! /usr/bin/env python
-from azure.cognitiveservices.vision.computervision import ComputerVisionClient
-from azure.cognitiveservices.vision.computervision.models import TextOperationStatusCodes
-from azure.cognitiveservices.vision.computervision.models import TextRecognitionMode
-from azure.cognitiveservices.vision.computervision.models import VisualFeatureTypes
-from msrest.authentication import CognitiveServicesCredentials
-
 import os
-import sys
+import requests
 import time
+import json
+# If you are using a Jupyter notebook, uncomment the following line.
+# %matplotlib inline
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+from PIL import Image
+from io import BytesIO
 
 # Add your Computer Vision subscription key and endpoint to your environment variables.
 if 'COMPUTER_VISION_SUBSCRIPTION_KEY' in os.environ:
@@ -18,43 +19,48 @@ else:
 
 if 'COMPUTER_VISION_ENDPOINT' in os.environ:
     endpoint = os.environ['COMPUTER_VISION_ENDPOINT']
-else:
-    print("\nSet the COMPUTER_VISION_ENDPOINT environment variable.\n**Restart your shell or IDE for changes to take effect.**")
-    sys.exit()
 
-computervision_client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(subscription_key))
+analyze_url = endpoint + "vision/v2.1/read/core/asyncBatchAnalyze"
 
-# Recognize text with the Read API in a remote image by:
-#   1. Specifying whether the text to recognize is handwritten or printed.
-#   2. Calling the Computer Vision service's batch_read_file_in_stream with the:
-#      - context
-#      - image
-#      - text recognition mode
-#   3. Extracting the Operation-Location URL value from the batch_read_file_in_stream
-#      response
-#   4. Waiting for the operation to complete.
-#   5. Displaying the results.
-remote_image_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjr2CsAcRyzcdC9yFeC5OMLbipxGppQNLV7cyFL_OtwYa5b7IRPg"
-text_recognition_mode = TextRecognitionMode.printed
-num_chars_in_operation_id = 36
+for f_name in os.listdir('./'):
+    if f_name.endswith('.jpg'):
+        # print(f_name)
+        # Set image_path to the local path of an image that you want to analyze.
+        image_path = f_name
 
-client_response = computervision_client.batch_read_file(remote_image_url, {}, raw=True)
+        print("--------------------" + image_path + "--------------------")
 
-operation_location = client_response.headers["Operation-Location"]
-id_location = len(operation_location) - num_chars_in_operation_id
-operation_id = operation_location[id_location:]
+        # Read the image into a byte array
+        image_data = open(image_path, "rb").read()
+        headers = {'Ocp-Apim-Subscription-Key': subscription_key,
+                'Content-Type': 'application/octet-stream'}
+        params = {'visualFeatures': 'Categories,Description,Color'}
+        response = requests.post(
+            analyze_url, headers=headers, params=params, data=image_data)
+        # response.raise_for_status()
 
-print("\nRecognizing text in a remote image with the batch Read API ... \n")
+        # Holds the URI used to retrieve the recognized text.
+        # print("op location: ", response.headers["Operation-Location"])
+        # operation_url = response.headers["Operation-Location"]
+        print("headers: ", response.headers)
 
-while True:
-    result = computervision_client.get_read_operation_result(operation_id)
-    if result.status not in ['NotStarted', 'Running']:
-        break
-    time.sleep(1)
+        while("Retry-After" in response.headers):
+            time.sleep(int(response.headers['Retry-After']) + 1)
+            response = requests.post(
+            analyze_url, headers=headers, params=params, data=image_data)
 
-if result.status == TextOperationStatusCodes.succeeded:
-    for text_result in result.recognition_results:
-        for line in text_result.lines:
-            print(line.text)
-            print(line.bounding_box)
-            print()
+        # The recognized text isn't immediately available, so poll to wait for completion.
+        analysis = {}
+        poll = True
+        while (poll):
+            response_final = requests.get(
+                response.headers["Operation-Location"], headers=headers)
+            analysis = response_final.json()
+            time.sleep(1)
+            if ("recognitionResults" in analysis):
+                poll = False
+            if ("status" in analysis and analysis['status'] == 'Failed'):
+                poll = False
+
+        for j in range(len(analysis["recognitionResults"][0]["lines"])):
+            print(analysis["recognitionResults"][0]["lines"][j]["text"])
