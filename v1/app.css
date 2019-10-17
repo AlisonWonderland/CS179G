@@ -1,0 +1,29 @@
+.navbar-dark {
+    color: white;
+    background-color: red !important;
+}
+
+.form-inline .form-control {
+    width: 1300px;
+}
+
+.btn {
+    color: white;
+}
+
+.bg-light {
+    background-color: white !important;
+}
+
+.btn-outline-success {
+    border-color: white;
+}
+
+.form-inline .btn {
+    width: 200px;
+}
+
+#logo {
+    height: 50px;
+    width: 100px;
+}

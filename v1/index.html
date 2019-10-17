@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="app.css">
+    <title>v1</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+        <!-- <a class="navbar-brand">A Million Thanks Logo</a> -->
+        <img id="logo" src="http://amillionthanks.org/img/amillionthanks_logo.png" alt="A million thanks logo">
+    <!-- Navbar content -->
+        <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search city or state" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background: white;">
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Past Week
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Past Month</a>
+              <a class="dropdown-item" href="#">Past Year</a>
+              <a class="dropdown-item" href="#">Lifetime</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- <canvas id="myChart" style="max-width: 500px;"></canvas> -->
+    <div class="col-md-6">
+        <canvas id="myChart" style="min-width: 1300px; min-height: 600px;"></canvas>
+    </div>
+
+    <table class="table table-dark">
+        <thead>
+            <tr>
+            <th scope="col">Mail id #</th>
+            <th scope="col">Address</th>
+            <th scope="col">Date sent</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <th scope="row">1</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <tr>
+            <tr>
+            <th scope="row">2</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <tr>
+            <th scope="row">3</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <tr>
+            <th scope="row">4</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <th scope="row">5</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <tr>
+            <th scope="row">6</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <th scope="row">7</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <tr>
+            <th scope="row">8</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <th scope="row">9</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <tr>
+            <th scope="row">10</th>
+            <td>123 Sesame Street</td>
+            <td>October 1, 2019</td>
+            </tr>
+            <tr>
+            <th scope="row">3</th>
+            <td>123 Sesame Street</td>
+            <td>October 2, 2019</td>
+            </tr>
+            <tr>
+            <th scope="row">4</th>
+            <td>123 Sesame Street</td>
+            <td>October 3, 2019</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="mdb.js"></script>
+    <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                    labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                    datasets: [{
+                        label: 'Amount of mail sent this week',
+                        data: [12, 19, 3, 5, 2, 3, 5],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(0, 0, 0, 1)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(0, 0, 0, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+    <!-- <script src="barchart.js"></script> -->
+  </body>
+</html>

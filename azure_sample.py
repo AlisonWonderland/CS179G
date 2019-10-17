@@ -22,11 +22,13 @@ if 'COMPUTER_VISION_ENDPOINT' in os.environ:
 
 analyze_url = endpoint + "vision/v2.1/read/core/asyncBatchAnalyze"
 
-for f_name in os.listdir('./'):
+images_dir = "./sample_pics"
+
+for f_name in os.listdir(images_dir):
     if f_name.endswith('.jpg'):
         # print(f_name)
         # Set image_path to the local path of an image that you want to analyze.
-        image_path = f_name
+        image_path = images_dir + '/' + f_name
 
         print("--------------------" + image_path + "--------------------")
 
