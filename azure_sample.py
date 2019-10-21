@@ -3,8 +3,6 @@ import os
 import requests
 import time
 import json
-# If you are using a Jupyter notebook, uncomment the following line.
-# %matplotlib inline
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from PIL import Image
@@ -22,15 +20,16 @@ if 'COMPUTER_VISION_ENDPOINT' in os.environ:
 
 analyze_url = endpoint + "vision/v2.1/read/core/asyncBatchAnalyze"
 
-images_dir = "./sample_pics"
+images_dir = "./rotated_pics"
+data_lines = []
 
 for f_name in os.listdir(images_dir):
     if f_name.endswith('.jpg'):
-        # print(f_name)
-        # Set image_path to the local path of an image that you want to analyze.
         image_path = images_dir + '/' + f_name
 
-        print("--------------------" + image_path + "--------------------")
+        data_lines.append("--------------------" + f_name + " UNCLEANED--------------------\n")
+
+        print("--------------------" + f_name + "--------------------")
 
         # Read the image into a byte array
         image_data = open(image_path, "rb").read()
@@ -41,11 +40,9 @@ for f_name in os.listdir(images_dir):
             analyze_url, headers=headers, params=params, data=image_data)
         # response.raise_for_status()
 
-        # Holds the URI used to retrieve the recognized text.
-        # print("op location: ", response.headers["Operation-Location"])
-        # operation_url = response.headers["Operation-Location"]
-        print("headers: ", response.headers)
+        # print("headers: ", response.headers)
 
+        # If limit is reached, wait until more requests can be made
         while("Retry-After" in response.headers):
             time.sleep(int(response.headers['Retry-After']) + 1)
             response = requests.post(
@@ -66,3 +63,20 @@ for f_name in os.listdir(images_dir):
 
         for j in range(len(analysis["recognitionResults"][0]["lines"])):
             print(analysis["recognitionResults"][0]["lines"][j]["text"])
+            data_lines.append(analysis["recognitionResults"][0]["lines"][j]["text"] + '\n')
+        
+        with open("data.txt", 'w') as data_txt:
+            for line in data_lines:
+                data_txt.write(line)
+
+        print("--------------------CLEANING DATA--------------------")
+        # data_lines.append("--------------------" + f_name + " CLEANED--------------------\n")
+
+        street_address = re.compile('\d{1,4} [\w\s]{1,20}(?:street|st|avenue|ave|road|rd|highway|hwy|square|sq|trail|trl|drive|dr|court|ct|park|parkway|pkwy|circle|cir|boulevard|blvd)\W?(?=\s|$)', re.IGNORECASE)
+        zip_code = re.compile(r'\b\d{5}(?:[-\s]\d{4})?\b')
+
+        # print("street address and zipcode", street_address, zip_code)
+        for i in range(len(analysis["recognitionResults"][0]["lines"])):
+            street_match = re.search(street_address, analysis["recognitionResults"][0]["lines"][i]["text"])
+            zip_code_match = re.search(street_address, analysis["recognitionResults"][0]["lines"][i]["text"])
+            print(x)
