@@ -3,10 +3,44 @@ import os
 import requests
 import time
 import json
-import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
-from PIL import Image
-from io import BytesIO
+import re
+
+### Start of tests
+address_test = ['''SMITHSONIAN INSTITUTION
+National Museum of American History
+Lemelson Center
+14th Street & Constitution Avenue NW
+Washington DC 20013-7012
+202.633-3450
+daemmricha@si.edu''',
+"4133 W. 73 St.",
+"14th Street & Constitution Avenue NW",
+"12345 N Sesame st NW #11"
+]
+
+zip_code_test = [
+    0,
+    "23452-4312",
+    "23452",
+    "23452-431",
+]
+
+## Also clean up commas or periods in lines
+
+street_address = re.compile(r'\d{1,5}[\w\s]{1,20}.[\w\s]{1,20}(?:street|st|avenue|ave|road|rd|highway|hwy|square|sq|trail|trl|drive|dr|court|ct|park|parkway|pkwy|circle|cir|boulevard|blvd)\W?(?=\s|$)', re.IGNORECASE | re.MULTILINE) 
+street_address2 = re.compile(r'\d{1,5}[a-zA-Z0-9]{1,5} .{1,5} [\w\s]{1,20}(?:street|st|avenue|ave|road|rd|highway|hwy|square|sq|trail|trl|drive|dr|court|ct|park|parkway|pkwy|circle|cir|boulevard|blvd)\W?(?=\s|$)', re.IGNORECASE | re.MULTILINE)
+street_address3 = re.compile(r'\d{1,5}[a-zA-Z0-9]{1,5} [\w\s]{1,20}(?:street|st|avenue|ave|road|rd|highway|hwy|square|sq|trail|trl|drive|dr|court|ct|park|parkway|pkwy|circle|cir|boulevard|blvd)\W?(?=\s|$)', re.IGNORECASE | re.MULTILINE)
+zip_code = re.compile(r'\b\d{5}(?:[-\s]\d{4})?\b', re.IGNORECASE | re.MULTILINE)
+
+while(1):
+    for i in range(1, len(address_test)):
+        print(address_test[i])
+        print(zip_code_test[i])
+        street_match = re.search(street_address, address_test[i])
+        zip_code_match = re.search(zip_code, zip_code_test[i])
+        print("-Street:", street_match)
+        print("-Zip Code:", zip_code_match)
+    time.sleep(3)
 
 # Add your Computer Vision subscription key and endpoint to your environment variables.
 if 'COMPUTER_VISION_SUBSCRIPTION_KEY' in os.environ:
@@ -79,4 +113,6 @@ for f_name in os.listdir(images_dir):
         for i in range(len(analysis["recognitionResults"][0]["lines"])):
             street_match = re.search(street_address, analysis["recognitionResults"][0]["lines"][i]["text"])
             zip_code_match = re.search(street_address, analysis["recognitionResults"][0]["lines"][i]["text"])
-            print(x)
+            print("Street:", street_match)
+            print("Zip Code:", zip_code_match)
+
