@@ -1,2 +1,9 @@
 # Folders 
 sample_pics/
+rotated_pics/
+test/
+# File extensions to ignore
+*.txt
+*.jpg
+*.JPG
+*.jpeg

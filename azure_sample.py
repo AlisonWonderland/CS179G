@@ -6,43 +6,6 @@ import json
 import re
 
 def main():
-#     ### Start of tests
-#     address_test = ['''SMITHSONIAN INSTITUTION
-#     National Museum of American History
-#     Lemelson Center
-#     14th Street & Constitution Avenue NW
-#     Washington DC 20013-7012
-#     202.633-3450
-#     daemmricha@si.edu''',
-#     "4133 W. 73 St.",
-#     "14th Street & Constitution Avenue NW",
-#     "12345 N Sesame st NW #11"
-#     ]
-
-#     zip_code_test = [
-#         0,
-#         "23452-4312",
-#         "23452",
-#         "23452-431",
-#     ]
-
-#     ## Also clean up commas or periods in lines
-
-#     street_address = re.compile(r'\d{1,5}[\w\s]{1,20}.[\w\s]{1,20}(?:street|st|avenue|ave|road|rd|highway|hwy|square|sq|trail|trl|drive|dr|court|ct|park|parkway|pkwy|circle|cir|boulevard|blvd)\W?(?=\s|$)', re.IGNORECASE | re.MULTILINE) 
-#     street_address2 = re.compile(r'\d{1,5}[a-zA-Z0-9]{1,5} .{1,5} [\w\s]{1,20}(?:street|st|avenue|ave|road|rd|highway|hwy|square|sq|trail|trl|drive|dr|court|ct|park|parkway|pkwy|circle|cir|boulevard|blvd)\W?(?=\s|$)', re.IGNORECASE | re.MULTILINE)
-#     street_address3 = re.compile(r'\d{1,5}[a-zA-Z0-9]{1,5} [\w\s]{1,20}(?:street|st|avenue|ave|road|rd|highway|hwy|square|sq|trail|trl|drive|dr|court|ct|park|parkway|pkwy|circle|cir|boulevard|blvd)\W?(?=\s|$)', re.IGNORECASE | re.MULTILINE)
-#     zip_code = re.compile(r'\b\d{5}(?:[-\s]\d{4})?\b', re.IGNORECASE | re.MULTILINE)
-
-#     while(1):
-#         for i in range(1, len(address_test)):
-#             print(address_test[i])
-#             print(zip_code_test[i])
-#             street_match = re.search(street_address, address_test[i])
-#             zip_code_match = re.search(zip_code, zip_code_test[i])
-#             print("-Street:", street_match.group())
-#             print("-Zip Code:", zip_code_match.group())
-#         time.sleep(3)
-
     # Add your Computer Vision subscription key and endpoint to your environment variables.
     if 'COMPUTER_VISION_SUBSCRIPTION_KEY' in os.environ:
         subscription_key = os.environ['COMPUTER_VISION_SUBSCRIPTION_KEY']
@@ -62,7 +25,7 @@ def main():
     data_lines = [] # Stores all the output(uncleaned and cleaned to put into a txt file)
 
     for f_name in os.listdir(images_dir):
-        if f_name.endswith('.jpg'):
+        if f_name.endswith('.jpg') or f_name.endswith('.JPG'):
             image_path = images_dir + '/' + f_name
 
             data_lines.append("--------------------" + f_name + " UNCLEANED--------------------\n")
